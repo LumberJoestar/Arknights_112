@@ -1,8 +1,12 @@
 #This class consists of the function of the enemies
 
 class Enemy():
-    def __init__(self,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,range,speed,weight,lifeGain,abResis,origin,destination):
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
         #These are some of the basic stats that most of the enemies would consist
+        #Defines the enemy's name
+        self.name=name
+        #Defines the enemy's number in a level
+        self.levelN0=levelNo
         #Defines a classification of the enemy
         self.subUnit=subUnit
         #Defines the enemy's attack method
@@ -22,7 +26,7 @@ class Enemy():
         #Defines the basic time that an enemy take to take another attack
         self.atkTime=atkTime
         #Defines the enemy's range
-        self.range=range
+        self.atkrange=atkrange
         #Defines the enemy's speed
         self.speed=speed
         #Defines the enemy's weight
@@ -37,5 +41,50 @@ class Enemy():
         self.destination=destination
 
         #Below are some of the default stats that the enemies have
+        
         #A list which puts the enemy's possible targets to attack
         self.target=[]
+        #A list recording the enemy's current HP
+        self.currentHP=self.maxHP
+        #Records whether the enemy is alive or not:
+        self.isAlive=True
+        #Defines the enemie's taunt level
+        self.taunt=0
+        #Initialize an attack speed measurement to 100
+        self.atkSpeed=100
+        #A list containing the buffs
+        self.buff=[]
+        #And one containing debuffs
+        self.debuffs=[]
+        #Determines whether the enemy is blocked
+        self.isBlocked=False
+
+    #Checks whether the enemy is alive by checking the currentHP
+    def checkAlive(self):
+        if self.currentHP<0:
+            self.isAlive=False
+
+#The normal enemy class
+class NormalEnemy(Enemy):
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
+        super.__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+
+
+#The Elite enemy class
+class EliteEnemy(Enemy):
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
+        super.__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+
+#The Leader class
+class LeaderEnemy(Enemy):
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
+        super.__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+
+def testEnemies():
+    print('Testing whether each enemies could be constructed...',end='')
+    OriginiumSlug=('Originium Slug',1,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],(0,1),(1,0))
+    JaystonWilliams=('Jayston Williams',1,None,('Melee','Range'),('Ground'),550,180,0,0,1,1.0,0,0,0.5,0,0,[],(0,1),(1,0))
+    JaystonWilliams=('Jayston Williams',1,None,('Melee','Range'),('Ground'),550,180,0,0,1,1.0,0,0,0.5,0,0,[],(0,1),(1,0))
+testEnemies()
+
+        
