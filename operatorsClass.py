@@ -1,3 +1,4 @@
+from cmu_112_graphics import *
 #The Operators Class, or the Tower Class
 class Operator:
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -8,7 +9,7 @@ class Operator:
         self.atk=atk
         self.defence=defence
         self.cost=cost
-        
+         
         #Some common properties
         self.currentBlock=0
         self.atkSpeed=100
@@ -22,7 +23,7 @@ class Operator:
         #self.artResis=artResis
         #self.atkTime=atkTime
         #self.atkRange=atkRange
-
+        
 
 #8 professions are the subclasses of Operators()
 class Vanguard(Operator):

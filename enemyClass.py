@@ -1,3 +1,4 @@
+from cmu_112_graphics import *
 #This class consists of the function of the enemies
 
 class Enemy():
@@ -63,6 +64,14 @@ class Enemy():
     def checkAlive(self):
         if self.currentHP<0:
             self.isAlive=False
+    
+    def attackPhysical(self,operator):
+        operator.currentHP-=max((self.atk-operator.defence),0.05*self.atk)
+    
+    def attackMagical(self,operator):
+        operator.currentHP-=max(0.05*self.attack,(self.atk*(100-operator.artResis)))
+    
+        
 
 #The normal enemy class
 class NormalEnemy(Enemy):
@@ -86,5 +95,14 @@ def testEnemies():
     JaystonWilliams=('Jayston Williams',1,None,('Melee','Range'),('Ground'),550,180,0,0,1,1.0,0,0,0.5,0,0,[],(0,1),(1,0))
     JaystonWilliams=('Jayston Williams',1,None,('Melee','Range'),('Ground'),550,180,0,0,1,1.0,0,0,0.5,0,0,[],(0,1),(1,0))
 testEnemies()
+
+#######################################################################################################################
+#The Enemies:
+#######################################################################################################################
+
+#Our favourite originium slug:
+class OriginiumSlug(NormalEnemy):
+    def __init__(self,levelNo,origin,destination):
+        super.__init__('Originium Slug',levelNo,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],origin,destination)
 
         
