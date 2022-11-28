@@ -1,3 +1,4 @@
+
 from cmu_112_graphics import *
 #This class consists of the function of the enemies
 
@@ -76,25 +77,20 @@ class Enemy():
 #The normal enemy class
 class NormalEnemy(Enemy):
     def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
-        super.__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
 
 
 #The Elite enemy class
 class EliteEnemy(Enemy):
     def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
-        super.__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
 
 #The Leader class
 class LeaderEnemy(Enemy):
     def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
-        super.__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
 
-def testEnemies():
-    print('Testing whether each enemies could be constructed...',end='')
-    OriginiumSlug=('Originium Slug',1,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],(0,1),(1,0))
-    JaystonWilliams=('Jayston Williams',1,None,('Melee','Range'),('Ground'),550,180,0,0,1,1.0,0,0,0.5,0,0,[],(0,1),(1,0))
-    JaystonWilliams=('Jayston Williams',1,None,('Melee','Range'),('Ground'),550,180,0,0,1,1.0,0,0,0.5,0,0,[],(0,1),(1,0))
-testEnemies()
+
 
 #######################################################################################################################
 #The Enemies:
@@ -103,6 +99,8 @@ testEnemies()
 #Our favourite originium slug:
 class OriginiumSlug(NormalEnemy):
     def __init__(self,levelNo,origin,destination):
-        super.__init__('Originium Slug',levelNo,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],origin,destination)
+        super().__init__('Originium Slug',levelNo,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],origin,destination)
+
+ori=OriginiumSlug(1,2,3)
 
         

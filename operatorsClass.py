@@ -23,55 +23,57 @@ class Operator:
         #self.artResis=artResis
         #self.atkTime=atkTime
         #self.atkRange=atkRange
+        #self.redeployTime=redeployTime
         
 
 #8 professions are the subclasses of Operators()
 class Vanguard(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 class Guard(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 class Sniper(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 class Caster(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 class Defender(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 class Medic(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 class Specialist(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 class Supporter(Operator):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
 
 #Sub professions:
 #The ones that are not kept for MVP is commented out
 class Pioneer(Vanguard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='Blocks 2 enemies'
         self.block=2
         self.artResis=0
         self.atkTime=1.05
         self.atkRange=[['Center',True]]
+        self.redeployTime=70
 
 class Charger(Vanguard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Obtain 1 DP after this unit defeats an enemy;
                          Refunds the original DP Cost when retreated.
@@ -80,6 +82,7 @@ class Charger(Vanguard):
         self.artResis=0
         self.atkTime=1.0
         self.atkRange=[['Center',True]]
+        self.redeployTime=70
 
 #class StandardBearer(Vanguard):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -102,7 +105,7 @@ class Charger(Vanguard):
                          #'''
 class Dreadnought(Guard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Blocks 1 enemy	
                          '''
@@ -110,10 +113,11 @@ class Dreadnought(Guard):
         self.artResis=0
         self.atkTime=1.5
         self.atkRange=[['Center',True]]
+        self.redeployTime=70
 
 class Centurion(Guard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Attacks multiple enemies equal to Block count.	
                          '''
@@ -121,10 +125,11 @@ class Centurion(Guard):
         self.artResis=0
         self.atkTime=1.2
         self.atkRange=[['Center',True]]
+        self.redeployTime=70
 
 class Lord(Guard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Can launch Ranged Attacks that deal 80'%' of normal ATK.	
                          '''
@@ -134,6 +139,7 @@ class Lord(Guard):
         self.atkRange=[[True,True,False,False],
                        ['Center',True,True,True],
                        [True,True,False,False]]
+        self.redeployTime=70
 
 #class ArtsFighter(Guard):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -198,7 +204,7 @@ class Lord(Guard):
 
 class Marksman(Sniper):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Attacks aerial enemies first.	
                          '''
@@ -208,10 +214,11 @@ class Marksman(Sniper):
         self.atkRange=[[True,True,True,True],
                        ['Center',True,True,True],
                        [True,True,True,True]]
+        self.redeployTime=70
     
 class Artilleryman(Sniper):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Deals AOE Physical Damage.	
                          '''
@@ -221,10 +228,11 @@ class Artilleryman(Sniper):
         self.atkRange=[[True,True,True,True,True],
                        ['Center',True,True,True,True],
                        [True,True,True,True,True]]
+        self.redeployTime=70
 
 class Deadeye(Sniper):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Prioritizes attacking the enemy with lowest DEF within range first.	
                          '''
@@ -236,6 +244,7 @@ class Deadeye(Sniper):
                        ['Center',True,True,True,True],
                        [True,True,True,True,False],
                        [True,True,True,False,False]]
+        self.redeployTime=70
 #class Heavyshooter(Sniper):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
         #super.__init__(name,group,maxHP,atk,defence,cost)
@@ -267,7 +276,7 @@ class Deadeye(Sniper):
 
 class Core(Caster):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Deals Arts Damage.			
                          '''
@@ -277,10 +286,11 @@ class Core(Caster):
         self.atkRange=[[True,True,True,False],
                        ['Center',True,True,True],
                        [True,True,True,False]]
+        self.redeployTime=70
 
 class Splash(Caster):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Deals AOE Arts Damage.			
                          '''
@@ -290,6 +300,7 @@ class Splash(Caster):
         self.atkRange=[[True,True,True],
                        ['Center',True,True],
                        [True,True,True]]
+        self.redeployTime=70
 
 #class Blast(Caster):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -332,7 +343,7 @@ class Splash(Caster):
 
 class Protector(Defender):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Blocks 3 enemies				
                          '''
@@ -340,10 +351,11 @@ class Protector(Defender):
         self.artResis=0
         self.atkTime=1.2
         self.atkRange=[['Center',True]]
+        self.redeployTime=70
 
 class Guardian(Defender):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Can heal allies by using the skill.					
                          '''
@@ -351,6 +363,7 @@ class Guardian(Defender):
         self.artResis=10
         self.atkTime=1.2
         self.atkRange=[['Center']]
+        self.redeployTime=70
 
 #class Juggernaut(Defender):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -389,7 +402,7 @@ class Guardian(Defender):
 
 class Med(Medic):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Restores the HP of allies.						
                          '''
@@ -399,9 +412,11 @@ class Med(Medic):
         self.atkRange=[[True,True,True,True],
                        ['Center',True,True,True],
                        [True,True,True,True]]
+        self.redeployTime=70
+
 class MultiTarget(Medic):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Restores the HP of 3 allies simultaneously.						
                          '''
@@ -411,6 +426,7 @@ class MultiTarget(Medic):
         self.atkRange=[[True,True,True,True],
                        [True,'Center',True,True],
                        [True,True,True,True]]
+        self.redeployTime=70
 
 #class Therapist(Medic):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -444,7 +460,7 @@ class MultiTarget(Medic):
 
 class PushStroker(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Can attack multiple enemies equal to Block count.
                          Can be deployed on Ranged Tiles.
@@ -453,10 +469,11 @@ class PushStroker(Specialist):
         self.artResis=0
         self.atkTime=1.2
         self.atkRange=[['Center',True]]
+        self.redeployTime=70
 
 class Hookmaster(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          	Can Shift enemies by using skills.
                             Can be deployed on Ranged Tiles.
@@ -465,10 +482,11 @@ class Hookmaster(Specialist):
         self.artResis=0
         self.atkTime=1.8
         self.atkRange=[['Center',True,True,True]]
+        self.redeployTime=70
 
 class Executor(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          	Significantly reduced Redeployment Time.
                          '''
@@ -476,10 +494,11 @@ class Executor(Specialist):
         self.artResis=0
         self.atkTime=0.93
         self.atkRange=[['Center',True]]
+        self.redeployTime=18
 
 class Ambusher(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Deals Damage to all targets within range.
                          50% chance to dodge Physical and Arts attacks and is less likely to be targeted by enemies.							
@@ -490,6 +509,7 @@ class Ambusher(Specialist):
         self.atkRange=[[True,True,True,False],
                        [True,'Center',True,True],
                        [True,True,True,False]]
+        self.redeployTime=70
 
 
 #class Geek(Specialist):
@@ -525,7 +545,7 @@ class Ambusher(Specialist):
 
 class DecelBinder(Supporter):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                          Deals Arts Damage and Slows the target for a short time.		
                          '''
@@ -537,7 +557,7 @@ class DecelBinder(Supporter):
                        [True,True,True,True]]
 class Summoner(Supporter):
     def __init__(self,name,group,maxHP,atk,defence,cost):
-        super.__init__(name,group,maxHP,atk,defence,cost)
+        super().__init__(name,group,maxHP,atk,defence,cost)
         self.description='''
                         Deals Arts Damage.
                         Can use Summons in battles.			

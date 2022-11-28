@@ -2,7 +2,7 @@ from cmu_112_graphics import *
 from operatorsClass import*
 from enemyClass import*
 from levelClass import*
-
+from graphicsHelpers import*
 
 #The Levels:
 from level0_1 import*

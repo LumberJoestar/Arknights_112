@@ -1,4 +1,7 @@
 from cmu_112_graphics import *
+from graphicsHelpers import*
+from enemyClass import*
+from operatorsClass import*
 #This file contains all of the map contents
 
 #########################################################################
@@ -99,6 +102,55 @@ class Level:
     def location(self,row,col):
         return self.map[row][col]
     
+    #Returns the level's dimensions
+    def levelDimensions(self):
+        self.rows = len(self.map)
+        self.cols = len(self.map[0])
+        self.margin = 15
+        return (self.rows, self.cols, self.margin)
+    
+    def getCellBounds(self,app, row, col):
+        gridWidth  = app.width - 2*self.margin
+        gridHeight = 0.8*app.height - 2*self.margin
+        cellWidth = gridWidth / self.cols
+        cellHeight = gridHeight / self.rows
+        x0 = self.margin + col * cellWidth
+        x1 = self.margin + (col+1) * cellWidth
+        y0 = self.margin + row * cellHeight
+        y1 = self.margin + (row+1) * cellHeight
+        return (x0, y0, x1, y1)
+
+    def redraw(self,app,canvas):
+        self.levelDimensions()
+        for row in range (self.rows):
+            for col in range(self.cols):
+                x0,y0,x1,y1=self.getCellBounds(app,row,col)
+                if isinstance(self.map[row][col],Path):
+                    canvas.create_rectangle(x0,y0,x1,y1,fill='green',outline='darkgreen')
+                elif isinstance(self.map[row][col],Fence):
+                    canvas.create_rectangle(x0,y0,x1,y1,fill='black',outline='darkgreen')
+                    canvas.create_rectangle(x0+app.width/100,y0+app.height/100,x1-app.width/100,y1-app.height/100,fill='green',outline='darkgreen')
+                elif isinstance(self.map[row][col],NPath):
+                    canvas.create_rectangle(x0,y0,x1,y1,fill='black',outline='yellow')
+                    canvas.create_rectangle(x0+app.width/100,y0+app.height/100,x1-app.width/100,y1-app.height/100,fill='yellow',outline='black')
+                    canvas.create_rectangle(x0+app.width/50,y0+app.height/50,x1-app.width/50,y1-app.height/50,fill='yellow',outline='black')
+                    canvas.create_line(x0,y0,x1,y1,fill='black')
+                    canvas.create_line(x1,y0,x0,y1,fill='black')
+                elif isinstance(self.map[row][col],Wall):
+                    canvas.create_rectangle(x0,y0,x1,y1,fill='gray',outline='black')
+                elif isinstance(self.map[row][col],HighLand):
+                    canvas.create_rectangle(x0,y0,x1,y1,fill='gray',outline='black')
+                    canvas.create_oval(x0+app.width/80,y0+app.height/80,x1-app.width/80,y1-app.height/80,fill='red',outline='black')
+                    canvas.create_oval(x0+app.width/50,y0+app.height/50,x1-app.width/50,y1-app.height/50,fill='gray',outline='black')
+                    canvas.create_line((x0+x1)/2,y0+app.height/100,(x0+x1)/2,y1-app.height/100,fill='red',width=3)
+                    canvas.create_line(x0+app.width/100,(y0+y1)/2,x1-app.width/100,(y0+y1)/2,fill='red',width=3)
+                elif isinstance(self.map[row][col],Destination):
+                    canvas.create_rectangle(x0,y0,x1,y1,fill='blue',outline='blue')
+                    canvas.create_text((x0+x1)/2,(y0+y1)/2,text='!',font='Arial 26',fill='white')
+                elif isinstance(self.map[row][col],Origin):
+                    canvas.create_rectangle(x0,y0,x1,y1,fill='red',outline='red')
+                    canvas.create_text((x0+x1)/2,(y0+y1)/2,text='!',font='Arial 26',fill='white')
+
     #Check whether a move is valid
     def validMove(self,start,direction):
         row,col=start
@@ -182,19 +234,5 @@ class Level:
         path.pop()
         return None
 
-#Test case for path solving, where the enemy class is not yet properly defined
-def testSolvePath():
-    print('Testing solvePath...',end='')
-    map=[[Path(),Path(),Path(),Path(),Path(),Origin(),Path(),Path(),Wall()],
-         [Path(),Wall(),Path(),HighLand(),Wall(),Path(),Wall(),Path(),Wall()],
-         [Path(),Path(),Path(),Path(),Path(),Destination(),Path(),Path(),Path()],
-         [Wall(),Path(),HighLand(),Path(),Wall(),Path(),Fence(),HighLand(),Path()],
-         [Destination(),NPath(),Path(),Path(),HighLand(),Path(),HighLand(),HighLand(),Origin()],
-         [Wall(),Wall(),Wall(),Wall(),Wall(),Wall(),Wall(),Wall(),Wall()]]
-    demo=Level(map,['Originium Slug'])
-    print(demo.solvePath((0,5),(4,0)))
-    print(demo.solvePath((4,8),(4,0)))
-    print('Passed')
-
-testSolvePath()    
+  
     
