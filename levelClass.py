@@ -97,6 +97,7 @@ class Level:
         self.map=map
         self.life=3
         self.enemies=enemies
+        self.levelDimensions()
 
     #Returns the type of land on the map 
     def location(self,row,col):
@@ -120,8 +121,13 @@ class Level:
         y1 = self.margin + (row+1) * cellHeight
         return (x0, y0, x1, y1)
 
+    #Sets the initial x and y coordinates of the enemy
+    def setOriginDimensions(self,app,enemy):
+        (x0,y0,x1,y1)=self.getCellBounds(app,enemy.origin[0],enemy.origin[1])
+        enemy.x=(x0+x1)/2
+        enemy.y=(y0+y1)/2
+
     def redraw(self,app,canvas):
-        self.levelDimensions()
         for row in range (self.rows):
             for col in range(self.cols):
                 x0,y0,x1,y1=self.getCellBounds(app,row,col)
@@ -233,6 +239,3 @@ class Level:
         visited.remove(start)
         path.pop()
         return None
-
-  
-    

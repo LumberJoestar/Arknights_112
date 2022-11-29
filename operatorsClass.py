@@ -24,7 +24,13 @@ class Operator:
         #self.atkTime=atkTime
         #self.atkRange=atkRange
         #self.redeployTime=redeployTime
-        
+        def attackPhysical(self,enemy):
+            if self.isAlive:
+                enemy.currentHP-=max(0.05*self.atk,(self.atk-enemy.defence))
+    
+        def attackMagical(self,enemy):
+            if self.isAlive:
+                enemy.currentHP-=max(0.05*self.attack,(self.atk*(100-enemy.artResis)))
 
 #8 professions are the subclasses of Operators()
 class Vanguard(Operator):
@@ -239,7 +245,7 @@ class Deadeye(Sniper):
         self.block=1
         self.artResis=0
         self.atkTime=2.7
-        self.atkRange=[[True,True,True,False,False]
+        self.atkRange=[[True,True,True,False,False],
                        [True,True,True,True,False],
                        ['Center',True,True,True,True],
                        [True,True,True,True,False],

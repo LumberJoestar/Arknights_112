@@ -1,14 +1,16 @@
 
 from cmu_112_graphics import *
+from levelClass import*
+from operatorsClass import*
 #This class consists of the function of the enemies
 
 class Enemy():
-    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination,emergeTime,checkPoints):
         #These are some of the basic stats that most of the enemies would consist
         #Defines the enemy's name
         self.name=name
         #Defines the enemy's number in a level
-        self.levelN0=levelNo
+        self.levelNo=levelNo
         #Defines a classification of the enemy
         self.subUnit=subUnit
         #Defines the enemy's attack method
@@ -41,6 +43,10 @@ class Enemy():
         self.origin=origin
         #Defines the enemy's destination in a level
         self.destination=destination
+        #Defines the enemy's emerge time within the level
+        self.emergeTime=emergeTime
+        #Defines the series of check points the enemy need to go through before approaching destination
+        self.checkPoints=checkPoints
 
         #Below are some of the default stats that the enemies have
         
@@ -60,35 +66,60 @@ class Enemy():
         self.debuffs=[]
         #Determines whether the enemy is blocked
         self.isBlocked=False
+        #The enemy's current location
+        self.x,self.y=(-1,-1)
+        
+        #The enemy's direction:
+        self.direction=(0,0)
 
-    #Checks whether the enemy is alive by checking the currentHP
+        
+    ############################################################################
+    #Enemy Methods:
+    ############################################################################  
+    
+    #Returns the enemy's path:
+    def solveEnemyPath(self,level):
+        path=[]
+        if len(self.checkPoints)==0:
+            path=level.solvePath(self.origin,self.destination)
+        else:
+            path.extend(level.solvePath(self.origin,self.checkPoints[0]))
+            for i in range(1,len(self.checkPoints)):
+                path.extend(level.solvePath(path[-1],self.checkPoints[i])[1:])
+            path.extend(level.solvePath(path[-1],self.destination)[1:])
+            return path
+
+        #Checks whether the enemy is alive by checking the currentHP
     def checkAlive(self):
         if self.currentHP<0:
             self.isAlive=False
     
     def attackPhysical(self,operator):
-        operator.currentHP-=max((self.atk-operator.defence),0.05*self.atk)
+        if self.isAlive:
+            operator.currentHP-=max((self.atk-operator.defence),0.05*self.atk)
     
     def attackMagical(self,operator):
-        operator.currentHP-=max(0.05*self.attack,(self.atk*(100-operator.artResis)))
+        if self.isAlive:
+            operator.currentHP-=max(0.05*self.attack,(self.atk*(100-operator.artResis)))
     
-        
-
+    
+    
+    
 #The normal enemy class
 class NormalEnemy(Enemy):
-    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
-        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination,emergeTime,checkPoints):
+        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination,emergeTime,checkPoints)
 
 
 #The Elite enemy class
 class EliteEnemy(Enemy):
-    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
-        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination,emergeTime,checkPoints):
+        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination,emergeTime,checkPoints)
 
 #The Leader class
 class LeaderEnemy(Enemy):
-    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination):
-        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination)
+    def __init__(self,name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination,emergeTime,checkPoints):
+        super().__init__(name,levelNo,subUnit,atkMethod,moveMethod,maxHP,atk,defence,artResis,val,atkTime,atkrange,speed,weight,lifeGain,abResis,origin,destination,emergeTime,checkPoints)
 
 
 
@@ -98,9 +129,9 @@ class LeaderEnemy(Enemy):
 
 #Our favourite originium slug:
 class OriginiumSlug(NormalEnemy):
-    def __init__(self,levelNo,origin,destination):
-        super().__init__('Originium Slug',levelNo,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],origin,destination)
+    def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
+        super().__init__('Originium Slug',levelNo,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],origin,destination,emergeTime,checkPoints)
 
-ori=OriginiumSlug(1,2,3)
+
 
         

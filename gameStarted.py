@@ -35,4 +35,4 @@ def appStarted(app):
     app.timerDelay=33
 
 
-runApp(width=1200,height=800)
+runApp(width=1200,height=900)
