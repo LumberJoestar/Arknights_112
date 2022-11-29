@@ -139,6 +139,21 @@ class Level:
         cellHeight = gridHeight / self.rows
         enemy.x+=dx*enemy.speed*cellWidth/30
         enemy.y+=dy*enemy.speed*cellHeight/30
+        #Conditions for direction turning:
+        (tx0,ty0,tx1,ty1)=self.getCellBounds(app,enemy.path[1][0],enemy.path[1][1])
+        turningX=(tx0+tx1)/2
+        turningY=(ty0+ty1)/2
+        if almostEqual(enemy.x, turningX, epsilon=10**-7) and almostEqual(enemy.y, turningY, epsilon=10**-7):
+            if len(enemy.path)>2:
+                enemy.direction=(enemy.path[2][1]-enemy.path[1][1],enemy.path[2][0]-enemy.path[1][0])
+                enemy.path.pop(0)
+            #This determines whether the level life is lost
+            elif len(enemy.path)==2:
+                enemy.direction=(0,0)
+                self.life-=1
+                self.enemies.remove(enemy)
+                print(self.life)
+
         
 
     def redraw(self,app,canvas):
@@ -190,14 +205,19 @@ class Level:
         resultDown=self.pathFind(start,end,list(),set(),'Down')
         resultLeft=self.pathFind(start,end,list(),set(),'Left')
         toBeCompared=[resultUp,resultRight,resultDown,resultLeft]
+        #print(resultUp)
+        #print(resultRight)
+        #print(resultDown)
+        #print(resultLeft)
         if resultUp==None and resultRight==None and resultLeft==None and resultDown==None:
             return None
         for i in range(3):
             if toBeCompared[i]!=None:
-                best=toBeCompared[0]
-                bestLen=len(toBeCompared[0])
+                best=toBeCompared[i]
+                bestLen=len(toBeCompared[i])
+                break
         for result in toBeCompared:
-            if result!=None and len(result)<bestLen:
+            if result!=None and len(result)<=bestLen:
                 best=result
                 bestLen=len(result)
         return best
@@ -224,7 +244,7 @@ class Level:
                         if result!=None:
                             return result
             if startingDirect=='Right':
-                for direction in [(0,1),(-1,0),(0,-1),(1,0)]:
+                for direction in [(0,1),(1,0),(0,-1),(-1,0)]:
                     if self.validMove(start,direction):
                         row,col=start
                         drow,dcol=direction
@@ -233,7 +253,7 @@ class Level:
                         if result!=None:
                             return result
             if startingDirect=='Down':
-                for direction in [(-1,0),(0,-1),(1,0),(0,1)]:
+                for direction in [(1,0),(0,-1),(-1,0),(0,1)]:
                     if self.validMove(start,direction):
                         row,col=start
                         drow,dcol=direction

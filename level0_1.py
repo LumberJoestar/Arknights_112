@@ -13,7 +13,6 @@ def level0_1Mode_timerFired(app):
      app.timerCount+=33
      for enemy in app.level.enemies:
           app.level.enemyMove(app,enemy)
-          print(enemy.path) 
      
     
 

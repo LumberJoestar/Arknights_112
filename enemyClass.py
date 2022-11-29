@@ -89,7 +89,7 @@ class Enemy():
             path.extend(level.solvePath(self.origin,self.checkPoints[0]))
             for i in range(1,len(self.checkPoints)):
                 path.extend(level.solvePath(path[-1],self.checkPoints[i])[1:])
-            path.extend(level.solvePath(path[-1],self.destination)[1:])
+            path.extend(level.solvePath(self.checkPoints[-1],self.destination)[1:])
             return path
 
         #Checks whether the enemy is alive by checking the currentHP
