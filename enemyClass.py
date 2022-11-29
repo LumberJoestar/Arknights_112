@@ -71,6 +71,8 @@ class Enemy():
         
         #The enemy's direction:
         self.direction=(0,0)
+        #A list containing the enemy's path
+        self.path=[]
 
         
     ############################################################################
@@ -82,6 +84,7 @@ class Enemy():
         path=[]
         if len(self.checkPoints)==0:
             path=level.solvePath(self.origin,self.destination)
+            return path
         else:
             path.extend(level.solvePath(self.origin,self.checkPoints[0]))
             for i in range(1,len(self.checkPoints)):
@@ -132,6 +135,7 @@ class OriginiumSlug(NormalEnemy):
     def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
         super().__init__('Originium Slug',levelNo,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],origin,destination,emergeTime,checkPoints)
 
-
+    def redraw(self,app,canvas):
+        canvas.create_oval(self.x-15,self.y-15,self.x+15,self.y+15,fill='yellow',outline='black',width=5)
 
         

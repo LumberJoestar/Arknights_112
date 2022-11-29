@@ -96,6 +96,7 @@ class Level:
     def __init__(self,map,enemies):
         self.map=map
         self.life=3
+        #A list containing enemies that are not appearing in the field yet
         self.enemies=enemies
         self.levelDimensions()
 
@@ -122,10 +123,23 @@ class Level:
         return (x0, y0, x1, y1)
 
     #Sets the initial x and y coordinates of the enemy
-    def setOriginDimensions(self,app,enemy):
-        (x0,y0,x1,y1)=self.getCellBounds(app,enemy.origin[0],enemy.origin[1])
-        enemy.x=(x0+x1)/2
-        enemy.y=(y0+y1)/2
+    def setOriginDimensions(self,app):
+        for enemy in self.enemies:
+            (x0,y0,x1,y1)=self.getCellBounds(app,enemy.origin[0],enemy.origin[1])
+            enemy.x=(x0+x1)/2
+            enemy.y=(y0+y1)/2
+        
+
+    #Moves the enemy
+    def enemyMove(self,app,enemy):
+        dx,dy=enemy.direction
+        gridWidth  = app.width - 2*self.margin
+        gridHeight = 0.8*app.height - 2*self.margin
+        cellWidth = gridWidth / self.cols
+        cellHeight = gridHeight / self.rows
+        enemy.x+=dx*enemy.speed*cellWidth/30
+        enemy.y+=dy*enemy.speed*cellHeight/30
+        
 
     def redraw(self,app,canvas):
         for row in range (self.rows):
