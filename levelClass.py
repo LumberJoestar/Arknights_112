@@ -137,8 +137,8 @@ class Level:
         gridHeight = 0.8*app.height - 2*self.margin
         cellWidth = gridWidth / self.cols
         cellHeight = gridHeight / self.rows
-        enemy.x+=dx*enemy.speed*cellWidth/30
-        enemy.y+=dy*enemy.speed*cellHeight/30
+        enemy.x+=dx*enemy.speed*cellWidth/50
+        enemy.y+=dy*enemy.speed*cellHeight/50
         #Conditions for direction turning:
         (tx0,ty0,tx1,ty1)=self.getCellBounds(app,enemy.path[1][0],enemy.path[1][1])
         turningX=(tx0+tx1)/2
@@ -235,7 +235,7 @@ class Level:
             return path
         else:
             if startingDirect=='Up':
-                for direction in [(-1,0),(0,1),(1,0),(0,-1)]:
+                for direction in [(-1,0),(0,1),(0,-1)]:
                     if self.validMove(start,direction):
                         row,col=start
                         drow,dcol=direction
@@ -244,7 +244,7 @@ class Level:
                         if result!=None:
                             return result
             if startingDirect=='Right':
-                for direction in [(0,1),(1,0),(0,-1),(-1,0)]:
+                for direction in [(0,1),(1,0),(-1,0)]:
                     if self.validMove(start,direction):
                         row,col=start
                         drow,dcol=direction
@@ -253,7 +253,7 @@ class Level:
                         if result!=None:
                             return result
             if startingDirect=='Down':
-                for direction in [(1,0),(0,-1),(-1,0),(0,1)]:
+                for direction in [(1,0),(0,-1),(0,1)]:
                     if self.validMove(start,direction):
                         row,col=start
                         drow,dcol=direction
@@ -262,7 +262,7 @@ class Level:
                         if result!=None:
                             return result
             if startingDirect=='Left':
-                for direction in [(0,-1),(-1,0),(0,1),(1,0)]:
+                for direction in [(0,-1),(-1,0),(1,0)]:
                     if self.validMove(start,direction):
                         row,col=start
                         drow,dcol=direction

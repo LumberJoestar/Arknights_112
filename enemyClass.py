@@ -138,4 +138,6 @@ class OriginiumSlug(NormalEnemy):
     def redraw(self,app,canvas):
         canvas.create_oval(self.x-15,self.y-15,self.x+15,self.y+15,fill='yellow',outline='black',width=5)
 
+#Normal Reunium Soldiers
+
         

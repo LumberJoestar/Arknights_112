@@ -28,10 +28,9 @@ def gameStartMode_mousePressed(app,event):
          [Wall(),Wall(),Wall(),Wall(),Wall(),Wall(),Wall(),Wall(),Wall()]]
         
         originiumSlug1=OriginiumSlug(1,(0,5),(2,5),1,[(0,0),(2,0),(3,1)])
-        #originiumSlug2=OriginiumSlug(1,(4,8),(2,5),2,[])
+        originiumSlug2=OriginiumSlug(1,(4,8),(2,5),2,[(0,7),(0,0)])
 
-        app.level=Level(map,[originiumSlug1])
-        print(app.level.solvePath((2,0),(3,1)))
+        app.level=Level(map,[originiumSlug1,originiumSlug2])
         for enemy in app.level.enemies:
             enemy.path=enemy.solveEnemyPath(app.level)
             enemy.direction=(enemy.path[1][1]-enemy.path[0][1],enemy.path[1][0]-enemy.path[0][0])
@@ -49,7 +48,7 @@ def gameStartMode_mousePressed(app,event):
 ########################################################
 def appStarted(app):
     app.mode='gameStartMode'
-    app.timerDelay=33
+    app.timerDelay=20
     app.timerCount=0
     app.level=None
 
