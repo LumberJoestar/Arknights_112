@@ -16,6 +16,8 @@ class Exusiai(Marksman):
         #self.frontStart=loadAnimatedGif('Exusiai_Front_Start.gif')
         #photoImage=self.backAttack
         #canvas.create_image(200,200,image=photoImage)
+        super().redraw(app,canvas)
+            
         if self.isDeployed:
             canvas.create_rectangle(self.x-25,self.y-25,self.x+25,self.y+25,fill='red',outline='yellow',width=5)
         elif self.isDeployed==False:

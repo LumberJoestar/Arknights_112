@@ -141,7 +141,7 @@ class OriginiumSlug(NormalEnemy):
 #Normal Reunium Soldiers
 class Soldier(NormalEnemy):
     def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
-        super().__init__('Soldier',levelNo,'Human',('Melee'),('Ground'),1650,200,100,0,1,2.0,0,2.0,1,0,[],origin,destination,emergeTime,checkPoints)
+        super().__init__('Soldier',levelNo,'Human',('Melee'),('Ground'),1650,200,100,0,1,2.0,0,1.0,1,0,[],origin,destination,emergeTime,checkPoints)
     
     def redraw(self,app,canvas):
         canvas.create_oval(self.x-25,self.y-25,self.x+25,self.y+25,fill='white',outline='black',width=5)

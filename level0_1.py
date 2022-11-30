@@ -23,6 +23,26 @@ def level0_1Mode_timerFired(app):
           for enemy in app.level.enemies:
                if enemy.isAlive and app.timerCount>=enemy.emergeTime*1000:
                     app.level.enemyMove(app,enemy)
+          for operators in app.level.operators:
+               if operators.isDeployed:
+                    for enemy in app.level.enemies:
+                         for locations in operators.area:
+                              row,col=locations
+                              if enemy.isAlive and enemy not in operators.target and app.level.inCell(app,enemy.x,enemy.y,row,col):
+                                   operators.target.append(enemy)
+                                   break
+                              elif enemy in operators.target and (enemy.isAlive==False or app.level.inCell(app,enemy.x,enemy.y,row,col)==False):
+                                   operators.target.remove(enemy)
+                    if len(operators.target)>0 and almostEqual(app.timerCount%(1000*operators.atkTime), 0, epsilon=10**-7):
+                         if operators.damageType=='Physical':
+                              operators.attackPhysical(operators.target[0])
+                              operators.target[0].checkAlive()
+                         elif operators.damageType=='Magical':
+                              operators.attackMagical(operators.target[0])
+                              operators.target[0].checkAlive()
+
+                         
+
      if almostEqual(app.timerCount%1000, 0, epsilon=10**-7) and app.level.life>0:
           app.level.cost+=1
 

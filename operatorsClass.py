@@ -1,4 +1,4 @@
-
+import copy
 from cmu_112_graphics import *
 from levelClass import*
 #The Operators Class, or the Tower Class
@@ -39,14 +39,19 @@ class Operator:
         self.isDeployed=False
         #A defult property for the damage type
         self.damageType=''
+        #This list contains the operator's potential target
+        self.target=[]
+        self.isAlive=True
 
         
         #These properties are the same for the subprofessions
-        #self.block=block
-        #self.artResis=artResis
-        #self.atkTime=atkTime
-        #self.atkRange=atkRange
-        #self.redeployTime=redeployTime
+        self.block=0
+        self.artResis=0
+        self.atkTime=1.0
+        self.atkRange=[['Center',True]]
+        self.redeployTime=70
+        #A list of area that is covered by the tower
+        self.area=[]
     def attackPhysical(self,enemy):
         if self.isAlive:
             enemy.currentHP-=max(0.05*self.atk,(self.atk-enemy.defence))
@@ -55,24 +60,122 @@ class Operator:
         if self.isAlive:
             enemy.currentHP-=max(0.05*self.attack,(self.atk*(100-enemy.artResis)))
     
+    #Changes the atkRange according to the direction
+    def directionChange(self):
+        if self.direction==(1,0) or type(self.atkRange[0][0])==str:
+            return
+        elif self.direction==(-1,0):
+            for row in range(len(self.atkRange)):
+                for col in range(len(self.atkRange[0])):
+                    if self.atkRange[row][col]=='Center':
+                        self.atkRange[row][col]=self.atkRange[row][len(self.atkRange[0])-1-col]
+                        self.atkRange[row][len(self.atkRange[0])-1-col]='Center'
+                        break
+        elif self.direction==(0,-1):
+            newAtkRange=copy.deepcopy(self.atkRange)
+            #Locaton of old row and col
+            oldLocRow=len(self.atkRange)
+            oldLocCol=len(self.atkRange[0])
+            #Length records
+            newRow=oldLocCol
+            newCol=oldLocRow
+            oldRow=oldLocRow
+            oldCol=oldLocCol
+            #Location of new row and col
+            newLocRow=oldLocRow+oldRow//2-newRow//2
+            newLocCol=oldLocCol+oldCol//2-newCol//2
+            newPiece=[[None for i in range(newCol)]for j in range(newRow)]
+            for i in range(oldRow):
+                for j in range(oldCol):
+                    newPiece[newRow-1-j][i]=self.atkRange[i][j]
+            self.atkRange=newPiece
+        elif self.direction==(0,1):
+            newAtkRange=copy.deepcopy(self.atkRange)
+            #Locaton of old row and col
+            oldLocRow=len(self.atkRange)
+            oldLocCol=len(self.atkRange[0])
+            #Length records
+            newRow=oldLocCol
+            newCol=oldLocRow
+            oldRow=oldLocRow
+            oldCol=oldLocCol
+            #Location of new row and col
+            newLocRow=oldLocRow+oldRow//2-newRow//2
+            newLocCol=oldLocCol+oldCol//2-newCol//2
+            newPiece=[[None for i in range(newCol)]for j in range(newRow)]
+            for i in range(oldRow):
+                for j in range(oldCol):
+                    newPiece[j][i]=self.atkRange[i][j]
+            self.atkRange=newPiece
 
 
     #Graphics related
     def mouseDragged(self,app,event):
-        if self.barX-50<=event.x<=self.barX+50 and self.barY-50<=event.y<=self.barY:
+        app.timerDelay=200
+        if self.inPosition==False and self.isDeployed==False and self.barX-50<=event.x<=self.barX+50 and self.barY-50<=event.y<=self.barY:
             self.barX=event.x
             self.barY=event.y
+        elif self.inPosition==True and self.isDeployed==False:
+            dx,dy=event.x-self.barX,event.y-self.barY
+            if abs(dx)>=abs(dy):
+                dx=int(dx/abs(dx))
+                self.direction=(dx,0)
+            else:
+                dy=int(dy/abs(dy))
+                self.direction=(0,dy)
+            self.x=self.barX
+            self.y=self.barY
+            self.location=app.level.toCell(app,self.x,self.y)
+            app.level.cost-=self.cost
+            self.directionChange()
+            #Updates the self.area list with tuples of rows and cols the map to be covered
+            #for row in range():
+                #for col in range():
+            for row in range(len(self.atkRange)):
+                for col in range(len(self.atkRange[0])):
+                    if self.atkRange[row][col]=='Center':
+                        centerLocation=(row,col)
+                        break
+            atkRow=len(self.atkRange)
+            atkCol=len(self.atkRange[0])
+            mapRow=len(app.level.map)
+            mapCol=len(app.level.map[0])
+            for row in range(atkRow):
+                for col in range(atkCol):
+                    dRow=centerLocation[0]-row
+                    dCol=centerLocation[1]-col
+                    newRow=self.location[0]-dRow
+                    newCol=self.location[1]-dCol
+                    if 0<=newRow<mapRow and 0<=newCol<mapCol and self.atkRange[row][col]!=False:
+                        self.area.append((newRow,newCol))
+
+
+            self.isDeployed=True
+            self.inPosition=False
     
     def mouseReleased(self,app,event):
+        app.timerDelay=20
         cellTarget=app.level.toCell(app,event.x,event.y)
-        if cellTarget!=None and self.barX==event.x and self.barY==event.y:
+        if cellTarget!=None and self.barX==event.x and self.barY==event.y and self.inPosition==False and self.isDeployed==False and app.level.cost>=self.cost:
             row,col=cellTarget
             if app.level.map[row][col].empty and type(app.level.map[row][col]) in self.uD:
-                print('Hi')
-        if self.barX!=self.oBarX or self.barY!=self.oBarY:
+                (x0,y0,x1,y1)=app.level.getCellBounds(app,row,col)
+                self.barX=(x0+x1)/2
+                self.barY=(y0+y1)/2
+                self.inPosition=True
+        elif self.inPosition==False and self.isDeployed==False and (self.barX!=self.oBarX or self.barY!=self.oBarY):
             self.barX=self.oBarX
             self.barY=self.oBarY
     
+    def redraw(self,app,canvas):
+        if self.inPosition==True:
+            canvas.create_line(self.barX-100,self.barY,self.barX,self.barY+100,fill='black',width=2)
+            canvas.create_line(self.barX,self.barY+100,self.barX+100,self.barY,fill='black',width=2)
+            canvas.create_line(self.barX+100,self.barY,self.barX,self.barY-100,fill='black',width=2)
+            canvas.create_line(self.barX,self.barY-100,self.barX-100,self.barY,fill='black',width=2)
+            canvas.create_text(self.barX,self.barY-75,text='Drag mouse to change the tower direction',font='Arial 14 bold',fill='white')
+        if self.isDeployed==False:
+            canvas.create_text(self.barX,self.barY-80,text=f'C{self.cost}',font='Arial 12 bold',fill='black')
 
 #8 professions are the subclasses of Operators()
 class Vanguard(Operator):
@@ -275,7 +378,7 @@ class Marksman(Sniper):
                        [True,True,True,True]]
         self.redeployTime=70
         self.damageType='Physical'
-        self.uD=[Path,Fence]
+        self.uD=[HighLand]
     
 class Artilleryman(Sniper):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -291,6 +394,7 @@ class Artilleryman(Sniper):
                        [True,True,True,True,True]]
         self.redeployTime=70
         self.damageType='Physical'
+        self.uD=[HighLand]
 
 class Deadeye(Sniper):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -308,6 +412,7 @@ class Deadeye(Sniper):
                        [True,True,True,False,False]]
         self.redeployTime=70
         self.damageType='Physical'
+        self.uD=[HighLand]
 
 #class Heavyshooter(Sniper):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -352,6 +457,7 @@ class Core(Caster):
                        [True,True,True,False]]
         self.redeployTime=70
         self.damageType='Magical'
+        self.uD=[HighLand]
 
 class Splash(Caster):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -367,6 +473,7 @@ class Splash(Caster):
                        [True,True,True]]
         self.redeployTime=70
         self.damageType='Magical'
+        self.uD=[HighLand]
 
 #class Blast(Caster):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
