@@ -11,15 +11,19 @@ def level0_1Mode_redrawAll(app,canvas):
     for enemy in app.level.enemies:
           if enemy.isAlive and app.timerCount>=enemy.emergeTime*1000:
                enemy.redraw(app,canvas)
-
     for operator in app.level.operators:
           operator.redraw(app,canvas)
+          operator.projectile.redraw(app,canvas)
     if app.level.life<=0:
           canvas.create_text(app.width/2,app.height/2,text='Mission Failed',font='Arial 80 bold',fill='red')
+    if app.level.isSuccess:
+          canvas.create_text(app.width/2,app.height/2,text='Mission Accomplished',font='Arial 80 bold',fill='blue')
 
 def level0_1Mode_timerFired(app):
-     app.timerCount+=20
-     if app.level.life>0:
+     app.timerCount+=app.timerDelay
+     if almostEqual(app.timerCount%1000, 0, epsilon=10**-7) and app.level.life>0:
+          app.level.cost+=1
+     if app.level.life>0 and app.level.isSuccess==False:
           for enemy in app.level.enemies:
                if enemy.isAlive and app.timerCount>=enemy.emergeTime*1000:
                     app.level.enemyMove(app,enemy)
@@ -36,15 +40,23 @@ def level0_1Mode_timerFired(app):
                     if len(operators.target)>0 and almostEqual(app.timerCount%(1000*operators.atkTime), 0, epsilon=10**-7):
                          if operators.damageType=='Physical':
                               operators.attackPhysical(operators.target[0])
+                              operators.projectile.timerFired(app)
+                              operators.projectile.move(operators.target[0].x,operators.target[0].y)
                               operators.target[0].checkAlive()
                          elif operators.damageType=='Magical':
                               operators.attackMagical(operators.target[0])
+                              operators.projectile.timerFired(app)
+                              operators.projectile.move(operators.target[0].x,operators.target[0].y)
                               operators.target[0].checkAlive()
-
+          #Check success conditions
+          for enemy in app.level.enemies:
+               if enemy.isAlive:
+                    app.level.isSuccess=False
+                    return
+          app.level.isSuccess=True
                          
 
-     if almostEqual(app.timerCount%1000, 0, epsilon=10**-7) and app.level.life>0:
-          app.level.cost+=1
+     
 
 def level0_1Mode_mouseDragged(app,event):
      for operator in app.level.operators:

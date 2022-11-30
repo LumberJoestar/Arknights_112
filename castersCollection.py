@@ -1,12 +1,14 @@
 from operatorsClass import*
 from graphicsHelpers import*
 from cmu_112_graphics import *
+from projectileClass import*
 #A separate file containing all the sub operable game characters - the casters
 
 class Eyjafjalla(Core):
     def __init__(self):
         super().__init__('Eyjafjalla','Rhodes Island',1743,735,122,21)
-    
+        self.projectile=Projectile(5,'darkred','yellow')
+
     def redraw(self,app,canvas):
         super().redraw(app,canvas)
         if self.isDeployed:

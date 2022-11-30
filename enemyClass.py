@@ -2,6 +2,7 @@
 from cmu_112_graphics import *
 from levelClass import*
 from operatorsClass import*
+from projectileClass import*
 #This class consists of the function of the enemies
 
 class Enemy():
@@ -137,13 +138,24 @@ class OriginiumSlug(NormalEnemy):
 
     def redraw(self,app,canvas):
         canvas.create_oval(self.x-15,self.y-15,self.x+15,self.y+15,fill='yellow',outline='black',width=5)
+        canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')
 
 #Normal Reunium Soldiers
 class Soldier(NormalEnemy):
     def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
-        super().__init__('Soldier',levelNo,'Human',('Melee'),('Ground'),1650,200,100,0,1,2.0,0,1.0,1,0,[],origin,destination,emergeTime,checkPoints)
+        super().__init__('Soldier',levelNo,None,('Melee'),('Ground'),1650,200,100,0,1,2.0,0,1.0,1,0,[],origin,destination,emergeTime,checkPoints)
     
     def redraw(self,app,canvas):
         canvas.create_oval(self.x-25,self.y-25,self.x+25,self.y+25,fill='white',outline='black',width=5)
+        canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')
+
+#Shield, needs magical damage
+class heavyGearDefender(EliteEnemy):
+    def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
+        super().__init__('heavyGearDefender',levelNo,None,('Melee'),('Ground'),6000,600,800,0,1,2.6,0,0.5,3,0,[],origin,destination,emergeTime,checkPoints)
+
+    def redraw(self,app,canvas):
+        canvas.create_oval(self.x-30,self.y-30,self.x+30,self.y+30,fill='black',outline='white',width=5)
+        canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')
 
         

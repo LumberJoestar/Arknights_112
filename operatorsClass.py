@@ -1,6 +1,7 @@
 import copy
 from cmu_112_graphics import *
 from levelClass import*
+from projectileClass import*
 #The Operators Class, or the Tower Class
 class Operator:
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -42,6 +43,8 @@ class Operator:
         #This list contains the operator's potential target
         self.target=[]
         self.isAlive=True
+        #An attribute for the projectile
+        self.projectile=Projectile(1,'black','white')
 
         
         #These properties are the same for the subprofessions
@@ -54,11 +57,13 @@ class Operator:
         self.area=[]
     def attackPhysical(self,enemy):
         if self.isAlive:
+            self.projectile.appears()
             enemy.currentHP-=max(0.05*self.atk,(self.atk-enemy.defence))
     
     def attackMagical(self,enemy):
         if self.isAlive:
-            enemy.currentHP-=max(0.05*self.attack,(self.atk*(100-enemy.artResis)))
+            self.projectile.appears()
+            enemy.currentHP-=max(0.05*self.atk,(self.atk*(100-enemy.artResis)/100))
     
     #Changes the atkRange according to the direction
     def directionChange(self):
@@ -126,8 +131,11 @@ class Operator:
             self.x=self.barX
             self.y=self.barY
             self.location=app.level.toCell(app,self.x,self.y)
+            app.level.map[self.location[0]][self.location[1]].isEmpty=True
             app.level.cost-=self.cost
             self.directionChange()
+            self.projectile.x,self.projectile.y=self.x,self.y
+            self.projectile.oX,self.projectile.oY=self.x,self.y
             #Updates the self.area list with tuples of rows and cols the map to be covered
             #for row in range():
                 #for col in range():
@@ -148,8 +156,6 @@ class Operator:
                     newCol=self.location[1]-dCol
                     if 0<=newRow<mapRow and 0<=newCol<mapCol and self.atkRange[row][col]!=False:
                         self.area.append((newRow,newCol))
-
-
             self.isDeployed=True
             self.inPosition=False
     

@@ -2,6 +2,7 @@ from cmu_112_graphics import *
 from graphicsHelpers import*
 from enemyClass import*
 from operatorsClass import*
+from projectileClass import*
 #This file contains all of the map contents
 
 #########################################################################
@@ -103,6 +104,7 @@ class Level:
         #Records the cost
         self.cost=10
         self.levelDimensions()
+        self.isSuccess=False
 
     #Returns the type of land on the map 
     def location(self,row,col):

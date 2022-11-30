@@ -3,7 +3,7 @@ from operatorsClass import*
 from enemyClass import*
 from levelClass import*
 from graphicsHelpers import*
-
+from projectileClass import*
 #The operators
 from snipersCollection import*
 from castersCollection import*
@@ -35,10 +35,12 @@ def gameStartMode_mousePressed(app,event):
         originiumSlug2=OriginiumSlug(2,(4,8),(4,0),2,[(0,0)])
         originiumSlug3=OriginiumSlug(3,(4,8),(4,0),3,[(0,0)])
         soldier1=Soldier(4,(4,8),(4,0),1,[(0,0)])
+        heavy1=heavyGearDefender(5,(4,8),(4,0),15,[(0,7),(0,0)])
         
         Exusi=Exusiai()
         Eyja=Eyjafjalla()
-        app.level=Level(map,[originiumSlug1,originiumSlug2,originiumSlug3,soldier1],[Exusi,Eyja])
+        app.level=Level(map,[originiumSlug1,originiumSlug2,originiumSlug3,soldier1,heavy1],[Exusi,Eyja])
+        app.level.cost=30
         for enemy in app.level.enemies:
             enemy.path=enemy.solveEnemyPath(app.level)
             enemy.direction=(enemy.path[1][1]-enemy.path[0][1],enemy.path[1][0]-enemy.path[0][0])
