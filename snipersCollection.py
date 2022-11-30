@@ -6,7 +6,6 @@ from cmu_112_graphics import *
 class Exusiai(Marksman):
     def __init__(self):
         super().__init__('Exusiai','Penguin Logistics',1673,630,161,14)
-        
     
     def redraw(self,app,canvas):
         #self.backAttack=loadAnimatedGif('Exusiai_Back_Attack.gif')
@@ -17,5 +16,12 @@ class Exusiai(Marksman):
         #self.frontStart=loadAnimatedGif('Exusiai_Front_Start.gif')
         #photoImage=self.backAttack
         #canvas.create_image(200,200,image=photoImage)
-        canvas.create_rectangle(100,100,200,200,fill='red')
+        if self.isDeployed:
+            canvas.create_rectangle(self.x-25,self.y-25,self.x+25,self.y+25,fill='red',outline='yellow',width=5)
+        elif self.isDeployed==False:
+            canvas.create_rectangle(self.barX-50,self.barY-50,self.barX+50,self.barY+50,fill='red',outline='yellow',width=5)
+            canvas.create_text(self.barX,self.barY-25,text=self.name,fill='white')
+            canvas.create_text(self.barX,self.barY+25,text='Marksman',fill='white')
+    
+    
 

@@ -93,11 +93,15 @@ class Destination:
 
 #The class Level that takes in a 2D list map
 class Level:
-    def __init__(self,map,enemies):
+    def __init__(self,map,enemies,operators):
         self.map=map
         self.life=3
         #A list containing enemies that are not appearing in the field yet
         self.enemies=enemies
+        #A list containing the operators
+        self.operators=operators
+        #Records the cost
+        self.cost=10
         self.levelDimensions()
 
     #Returns the type of land on the map 
@@ -121,13 +125,52 @@ class Level:
         y0 = self.margin + row * cellHeight
         y1 = self.margin + (row+1) * cellHeight
         return (x0, y0, x1, y1)
+    
+    #Reverse the cell dimensions back to the row and col number
+    def toCell(self,app,x,y):
+        for row in range(len(self.map)):
+            for col in range(len(self.map[0])):
+                if self.inCell(app,x,y,row,col):
+                    return (row,col)
+        return None
+    
+    #A helper for the operator bar
+    def getSubBounds(self,app,col):
+        gridWidth  = app.width - 2*self.margin
+        cellWidth = gridWidth / self.cols
+        x0 = app.width-self.margin - col * cellWidth
+        x1 = app.width-self.margin - (col+1) * cellWidth
+        y0 = 0.8*app.height+self.margin
+        y1 = app.height-self.margin
+        return (x0, y0, x1, y1)
+    
+    #Checks whether a point is in the cell
+    def inCell(self,app,x,y,row,col):
+        (x0,y0,x1,y1)=self.getCellBounds(app,row,col)
+        if x0<=x<=x1 and y0<=y<=y1:
+            return True
+        return False
+    
+    #Checks whether a point is in the sub cell
+    def inSub(self,app,x,y,col):
+        (x0,y0,x1,y1)=self.getSubBounds(app,col)
+        if y0<=y<=y1 and x0<=x<=x1:
+            return True
+        return False
 
-    #Sets the initial x and y coordinates of the enemy
+    #Sets the initial x and y coordinates of the enemy and bar locations for the operators
     def setOriginDimensions(self,app):
         for enemy in self.enemies:
             (x0,y0,x1,y1)=self.getCellBounds(app,enemy.origin[0],enemy.origin[1])
             enemy.x=(x0+x1)/2
             enemy.y=(y0+y1)/2
+        for i in range(0,len(self.operators)):
+            (x0,y0,x1,y1)=self.getSubBounds(app,len(self.operators)-1-i)
+            self.operators[i].barX=(x0+x1)/2
+            self.operators[i].barY=(y0+y1)/2
+            self.operators[i].oBarX=self.operators[i].barX
+            self.operators[i].oBarY=self.operators[i].barY
+            
         
 
     #Moves the enemy
@@ -150,9 +193,8 @@ class Level:
             #This determines whether the level life is lost
             elif len(enemy.path)==2:
                 enemy.direction=(0,0)
-                self.life-=1
+                self.life-=enemy.val
                 self.enemies.remove(enemy)
-                print(self.life)
 
         
 
@@ -185,6 +227,8 @@ class Level:
                 elif isinstance(self.map[row][col],Origin):
                     canvas.create_rectangle(x0,y0,x1,y1,fill='red',outline='red')
                     canvas.create_text((x0+x1)/2,(y0+y1)/2,text='!',font='Arial 26',fill='white')
+        canvas.create_text(0.93*app.width,0.75*app.height,text=f'Cost:{self.cost}',font='Arial 18 bold',fill='white')
+        canvas.create_text(0.5*app.width,0.02*app.height,text=f'Life:{self.life}',font='Arial 18 bold',fill='blue')
 
     #Check whether a move is valid
     def validMove(self,start,direction):
@@ -211,7 +255,7 @@ class Level:
         #print(resultLeft)
         if resultUp==None and resultRight==None and resultLeft==None and resultDown==None:
             return None
-        for i in range(3):
+        for i in range(4):
             if toBeCompared[i]!=None:
                 best=toBeCompared[i]
                 bestLen=len(toBeCompared[i])

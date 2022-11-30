@@ -1,4 +1,6 @@
+
 from cmu_112_graphics import *
+from levelClass import*
 #The Operators Class, or the Tower Class
 class Operator:
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -11,12 +13,33 @@ class Operator:
         self.cost=cost
          
         #Some common properties
+        self.direction=(1,0)
         self.currentBlock=0
         self.atkSpeed=100
         self.taunt=0
         self.currentHP=maxHP
         self.buff=[]
         self.debuff=[]
+        #Determines whether the operator could be placed on floor or highland
+        self.uD=[]
+        #The location in the operators bar, to be initialized in the levels
+        self.barX=None
+        self.barY=None
+        self.oBarX=None
+        self.oBarY=None
+        #The location on the battlefield
+        self.location=(None,None)
+        self.x=None
+        self.y=None
+        #This checks whether the operator is in a state where it is on the battlefield, yet its direction is not determined yet
+        self.inPosition=False
+        #This checks whether the operator is deployed or not.
+        #If it is deployed, the self.location would be utilized, else 
+        #the self.barLocation would be utilized
+        self.isDeployed=False
+        #A defult property for the damage type
+        self.damageType=''
+
         
         #These properties are the same for the subprofessions
         #self.block=block
@@ -24,13 +47,32 @@ class Operator:
         #self.atkTime=atkTime
         #self.atkRange=atkRange
         #self.redeployTime=redeployTime
-        def attackPhysical(self,enemy):
-            if self.isAlive:
-                enemy.currentHP-=max(0.05*self.atk,(self.atk-enemy.defence))
+    def attackPhysical(self,enemy):
+        if self.isAlive:
+            enemy.currentHP-=max(0.05*self.atk,(self.atk-enemy.defence))
     
-        def attackMagical(self,enemy):
-            if self.isAlive:
-                enemy.currentHP-=max(0.05*self.attack,(self.atk*(100-enemy.artResis)))
+    def attackMagical(self,enemy):
+        if self.isAlive:
+            enemy.currentHP-=max(0.05*self.attack,(self.atk*(100-enemy.artResis)))
+    
+
+
+    #Graphics related
+    def mouseDragged(self,app,event):
+        if self.barX-50<=event.x<=self.barX+50 and self.barY-50<=event.y<=self.barY:
+            self.barX=event.x
+            self.barY=event.y
+    
+    def mouseReleased(self,app,event):
+        cellTarget=app.level.toCell(app,event.x,event.y)
+        if cellTarget!=None and self.barX==event.x and self.barY==event.y:
+            row,col=cellTarget
+            if app.level.map[row][col].empty and type(app.level.map[row][col]) in self.uD:
+                print('Hi')
+        if self.barX!=self.oBarX or self.barY!=self.oBarY:
+            self.barX=self.oBarX
+            self.barY=self.oBarY
+    
 
 #8 professions are the subclasses of Operators()
 class Vanguard(Operator):
@@ -76,6 +118,9 @@ class Pioneer(Vanguard):
         self.atkTime=1.05
         self.atkRange=[['Center',True]]
         self.redeployTime=70
+        self.damageType='Physical'
+        self.uD=[Path,Fence]
+
 
 class Charger(Vanguard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -89,6 +134,8 @@ class Charger(Vanguard):
         self.atkTime=1.0
         self.atkRange=[['Center',True]]
         self.redeployTime=70
+        self.damageType='Physical'
+        self.uD=[Path,Fence]
 
 #class StandardBearer(Vanguard):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -120,6 +167,8 @@ class Dreadnought(Guard):
         self.atkTime=1.5
         self.atkRange=[['Center',True]]
         self.redeployTime=70
+        self.damageType='Physical'
+        self.uD=[Path,Fence]
 
 class Centurion(Guard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -132,6 +181,8 @@ class Centurion(Guard):
         self.atkTime=1.2
         self.atkRange=[['Center',True]]
         self.redeployTime=70
+        self.damageType='Physical'
+        self.uD=[Path,Fence]
 
 class Lord(Guard):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -146,6 +197,8 @@ class Lord(Guard):
                        ['Center',True,True,True],
                        [True,True,False,False]]
         self.redeployTime=70
+        self.damageType='Physical'
+        self.uD=[Path,Fence]
 
 #class ArtsFighter(Guard):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -221,6 +274,8 @@ class Marksman(Sniper):
                        ['Center',True,True,True],
                        [True,True,True,True]]
         self.redeployTime=70
+        self.damageType='Physical'
+        self.uD=[Path,Fence]
     
 class Artilleryman(Sniper):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -235,6 +290,7 @@ class Artilleryman(Sniper):
                        ['Center',True,True,True,True],
                        [True,True,True,True,True]]
         self.redeployTime=70
+        self.damageType='Physical'
 
 class Deadeye(Sniper):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -251,6 +307,8 @@ class Deadeye(Sniper):
                        [True,True,True,True,False],
                        [True,True,True,False,False]]
         self.redeployTime=70
+        self.damageType='Physical'
+
 #class Heavyshooter(Sniper):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
         #super.__init__(name,group,maxHP,atk,defence,cost)
@@ -293,6 +351,7 @@ class Core(Caster):
                        ['Center',True,True,True],
                        [True,True,True,False]]
         self.redeployTime=70
+        self.damageType='Magical'
 
 class Splash(Caster):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -307,6 +366,7 @@ class Splash(Caster):
                        ['Center',True,True],
                        [True,True,True]]
         self.redeployTime=70
+        self.damageType='Magical'
 
 #class Blast(Caster):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -358,6 +418,7 @@ class Protector(Defender):
         self.atkTime=1.2
         self.atkRange=[['Center',True]]
         self.redeployTime=70
+        self.damageType='Physical'
 
 class Guardian(Defender):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -370,6 +431,7 @@ class Guardian(Defender):
         self.atkTime=1.2
         self.atkRange=[['Center']]
         self.redeployTime=70
+        self.damageType='Physical'
 
 #class Juggernaut(Defender):
     #def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -476,6 +538,7 @@ class PushStroker(Specialist):
         self.atkTime=1.2
         self.atkRange=[['Center',True]]
         self.redeployTime=70
+        self.damageType='Physical'
 
 class Hookmaster(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -489,6 +552,7 @@ class Hookmaster(Specialist):
         self.atkTime=1.8
         self.atkRange=[['Center',True,True,True]]
         self.redeployTime=70
+        self.damageType='Physical'
 
 class Executor(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -501,6 +565,7 @@ class Executor(Specialist):
         self.atkTime=0.93
         self.atkRange=[['Center',True]]
         self.redeployTime=18
+        self.damageType='Physical'
 
 class Ambusher(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -516,6 +581,7 @@ class Ambusher(Specialist):
                        [True,'Center',True,True],
                        [True,True,True,False]]
         self.redeployTime=70
+        self.damageType='Physical'
 
 
 #class Geek(Specialist):
@@ -561,6 +627,8 @@ class DecelBinder(Supporter):
         self.atkRange=[[True,True,True,True],
                        [True,'Center',True,True],
                        [True,True,True,True]]
+        self.damageType='Magical'
+
 class Summoner(Supporter):
     def __init__(self,name,group,maxHP,atk,defence,cost):
         super().__init__(name,group,maxHP,atk,defence,cost)
@@ -574,6 +642,7 @@ class Summoner(Supporter):
         self.atkRange=[[True,True,True,False],
                        ['Center',True,True,True],
                        [True,True,True,False]]
+        self.damageType='Magical'
 
 #class Hexer(Supporter):
     #def __init__(self,name,group,maxHP,atk,defence,cost):

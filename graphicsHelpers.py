@@ -1,4 +1,5 @@
 from operatorsClass import*
+from cmu_112_graphics import *
 
 #From https://www.cs.cmu.edu/~112/notes/notes-animations-part4.html#animatedGifs
 def loadAnimatedGif(path):
