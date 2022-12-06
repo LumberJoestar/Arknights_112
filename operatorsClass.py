@@ -116,7 +116,6 @@ class Operator:
 
     #Graphics related
     def mouseDragged(self,app,event):
-        app.timerDelay=200
         if self.inPosition==False and self.isDeployed==False and self.barX-50<=event.x<=self.barX+50 and self.barY-50<=event.y<=self.barY:
             self.barX=event.x
             self.barY=event.y
@@ -160,7 +159,6 @@ class Operator:
             self.inPosition=False
     
     def mouseReleased(self,app,event):
-        app.timerDelay=20
         cellTarget=app.level.toCell(app,event.x,event.y)
         if cellTarget!=None and self.barX==event.x and self.barY==event.y and self.inPosition==False and self.isDeployed==False and app.level.cost>=self.cost:
             row,col=cellTarget

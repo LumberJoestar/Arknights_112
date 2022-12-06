@@ -62,6 +62,7 @@ def appStarted(app):
     app.timerCount=0
     app.level=None
     app.mouseSelect=None
+    app.pause=False
 
 
 runApp(width=1200,height=900)
