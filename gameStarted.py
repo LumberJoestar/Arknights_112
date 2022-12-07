@@ -2,7 +2,7 @@
 #import sys
 #print(f'"{sys.executable}" -m pip install pillow')
 #print(f'"{sys.executable}" -m pip install requests')
-
+#All the graphics and data are from https://prts.wiki and https://arknights.fandom.com/
 from cmu_112_graphics import *
 from operatorsClass import*
 from enemyClass import*

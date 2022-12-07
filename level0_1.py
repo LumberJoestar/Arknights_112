@@ -74,6 +74,8 @@ def level0_1Mode_timerFired(app):
 def level0_1Mode_mousePressed(app,event):
      if app.level.isSuccess:
           app.mode='gameStartMode'
+     elif app.level.life<=0 and app.level.isSuccess==False:
+          app.mode='gameStartMode'
 
 def level0_1Mode_mouseDragged(app,event):
      app.pause=True
