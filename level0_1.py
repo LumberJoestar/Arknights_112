@@ -22,7 +22,7 @@ def level0_1Mode_redrawAll(app,canvas):
 def level0_1Mode_timerFired(app):
      if app.pause==False:
           app.timerCount+=app.timerDelay
-     if almostEqual(app.timerCount%1000, 0, epsilon=10**-7) and app.level.life>0:
+     if almostEqual(app.timerCount%500, 0, epsilon=10**-7) and app.level.life>0:
           app.level.cost+=1
      if app.level.life>0 and app.level.isSuccess==False:
           if app.pause==False:
@@ -37,28 +37,43 @@ def level0_1Mode_timerFired(app):
                               if enemy.isAlive and enemy not in operators.target and app.level.inCell(app,enemy.x,enemy.y,row,col) and app.timerCount>=enemy.emergeTime*1000:
                                    operators.target.append(enemy)
                                    break
-                              elif enemy in operators.target and (enemy.isAlive==False or app.level.inCell(app,enemy.x,enemy.y,row,col)==False):
+                              elif enemy in operators.target:
+                                   if enemy.isAlive==False:
+                                        operators.target.remove(enemy)
+                                        break
+                                   if app.level.inCell(app,enemy.x,enemy.y,row,col)==False:
+                                        pass
+                                   elif app.level.inCell(app,enemy.x,enemy.y,row,col):
+                                        break
                                    operators.target.remove(enemy)
-                    if len(operators.target)>0 and almostEqual(app.timerCount%(1000*operators.atkTime), 0, epsilon=10**-7) and app.pause==False:
-                         if operators.damageType=='Physical':
-                              operators.attackPhysical(operators.target[0])
-                              operators.projectile.timerFired(app)
-                              operators.projectile.move(operators.target[0].x,operators.target[0].y)
-                              operators.target[0].checkAlive()
-                         elif operators.damageType=='Magical':
-                              operators.attackMagical(operators.target[0])
-                              operators.projectile.timerFired(app)
-                              operators.projectile.move(operators.target[0].x,operators.target[0].y)
-                              operators.target[0].checkAlive()
+                    if len(operators.target)>0 and app.pause==False:
+                         if almostEqual(operators.atkTimer%(1000*operators.atkTime), 0, epsilon=10**-7):
+                              operators.projectile.setDirection(operators.target[0].x,operators.target[0].y)
+                         operators.projectile.move()
+                         if operators.projectile.isHit(operators.target[0].x,operators.target[0].y):
+                              if operators.damageType=='Physical':
+                                   operators.attackPhysical(operators.target[0])
+                                   operators.target[0].checkAlive()
+                              elif operators.damageType=='Magical':
+                                   operators.attackMagical(operators.target[0])
+                                   operators.target[0].checkAlive()
+                         operators.atkTimer+=app.timerDelay
+                    elif len(operators.target)==0:
+                         operators.atkTimer=0
+                         operators.projectile.appear=False
+                    
           #Check success conditions
           for enemy in app.level.enemies:
                if enemy.isAlive:
                     app.level.isSuccess=False
                     return
-          app.level.isSuccess=True
+          if app.level.life!=0:
+               app.level.isSuccess=True
                          
 
-     
+def level0_1Mode_mousePressed(app,event):
+     if app.level.isSuccess:
+          app.mode='gameStartMode'
 
 def level0_1Mode_mouseDragged(app,event):
      app.pause=True

@@ -7,13 +7,16 @@ from projectileClass import*
 class Eyjafjalla(Core):
     def __init__(self):
         super().__init__('Eyjafjalla','Rhodes Island',1743,735,122,21)
-        self.projectile=Projectile(5,'darkred','yellow')
+        self.projectile=Projectile(10,'darkred','yellow')
 
     def redraw(self,app,canvas):
         super().redraw(app,canvas)
         if self.isDeployed:
-            canvas.create_rectangle(self.x-25,self.y-25,self.x+25,self.y+25,fill='darkred',outline='white',width=5)
+            if self.direction==(0,-1):
+                canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.eyjafjalla_back_attack))
+            elif self.direction==(-1,0):
+                canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.eyjafjalla_left_attack))
+            elif self.direction==(1,0) or self.direction==(0,1):
+                canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.eyjafjalla_right_attack))
         elif self.isDeployed==False:
-            canvas.create_rectangle(self.barX-50,self.barY-50,self.barX+50,self.barY+50,fill='darkred',outline='white',width=5)
-            canvas.create_text(self.barX,self.barY-25,text=self.name,fill='white')
-            canvas.create_text(self.barX,self.barY+25,text='Core',fill='white')
+            canvas.create_image(self.barX,self.barY,image=ImageTk.PhotoImage(app.eyjafjalla_head))

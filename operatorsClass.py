@@ -55,27 +55,31 @@ class Operator:
         self.redeployTime=70
         #A list of area that is covered by the tower
         self.area=[]
+        #A self timer
+        self.atkTimer=0
+    
     def attackPhysical(self,enemy):
         if self.isAlive:
-            self.projectile.appears()
             enemy.currentHP-=max(0.05*self.atk,(self.atk-enemy.defence))
     
     def attackMagical(self,enemy):
         if self.isAlive:
-            self.projectile.appears()
             enemy.currentHP-=max(0.05*self.atk,(self.atk*(100-enemy.artResis)/100))
     
     #Changes the atkRange according to the direction
     def directionChange(self):
-        if self.direction==(1,0) or type(self.atkRange[0][0])==str:
+        if self.direction==(1,0) or (type(self.atkRange[0][0])==str and len(self.atkRange[0])==1):
             return
         elif self.direction==(-1,0):
             for row in range(len(self.atkRange)):
-                for col in range(len(self.atkRange[0])):
-                    if self.atkRange[row][col]=='Center':
-                        self.atkRange[row][col]=self.atkRange[row][len(self.atkRange[0])-1-col]
-                        self.atkRange[row][len(self.atkRange[0])-1-col]='Center'
-                        break
+                for col in range(len(self.atkRange[0])//2):
+                    #if self.atkRange[row][col]=='Center':
+                        #self.atkRange[row][col]=self.atkRange[row][len(self.atkRange[0])-1-col]
+                        #self.atkRange[row][len(self.atkRange[0])-1-col]='Center'
+                        #break
+                    temp=self.atkRange[row][col]
+                    self.atkRange[row][col]=self.atkRange[row][len(self.atkRange[0])-1-col]
+                    self.atkRange[row][len(self.atkRange[0])-1-col]=temp
         elif self.direction==(0,-1):
             newAtkRange=copy.deepcopy(self.atkRange)
             #Locaton of old row and col
@@ -160,7 +164,7 @@ class Operator:
     
     def mouseReleased(self,app,event):
         cellTarget=app.level.toCell(app,event.x,event.y)
-        if cellTarget!=None and self.barX==event.x and self.barY==event.y and self.inPosition==False and self.isDeployed==False and app.level.cost>=self.cost:
+        if cellTarget!=None and almostEqual(self.barX, event.x, epsilon=10) and almostEqual(self.barY, event.y, epsilon=10) and self.inPosition==False and self.isDeployed==False and app.level.cost>=self.cost:
             row,col=cellTarget
             if app.level.map[row][col].empty and type(app.level.map[row][col]) in self.uD:
                 (x0,y0,x1,y1)=app.level.getCellBounds(app,row,col)
@@ -376,7 +380,7 @@ class Marksman(Sniper):
                          '''
         self.block=1
         self.artResis=0
-        self.atkTime=1.0
+        self.atkTime=0.5
         self.atkRange=[[True,True,True,True],
                        ['Center',True,True,True],
                        [True,True,True,True]]
@@ -408,7 +412,7 @@ class Deadeye(Sniper):
                          '''
         self.block=1
         self.artResis=0
-        self.atkTime=2.7
+        self.atkTime=1.35
         self.atkRange=[[True,True,True,False,False],
                        [True,True,True,True,False],
                        ['Center',True,True,True,True],
@@ -455,7 +459,7 @@ class Core(Caster):
                          '''
         self.block=1
         self.artResis=20
-        self.atkTime=1.6
+        self.atkTime=0.8
         self.atkRange=[[True,True,True,False],
                        ['Center',True,True,True],
                        [True,True,True,False]]
@@ -660,10 +664,11 @@ class Hookmaster(Specialist):
                          '''
         self.block=2
         self.artResis=0
-        self.atkTime=1.8
+        self.atkTime=0.9
         self.atkRange=[['Center',True,True,True]]
         self.redeployTime=70
         self.damageType='Physical'
+        self.uD=[HighLand,Path,Fence]
 
 class Executor(Specialist):
     def __init__(self,name,group,maxHP,atk,defence,cost):
@@ -755,12 +760,23 @@ class Summoner(Supporter):
                        [True,True,True,False]]
         self.damageType='Magical'
 
-#class Hexer(Supporter):
-    #def __init__(self,name,group,maxHP,atk,defence,cost):
-        #super.__init__(name,group,maxHP,atk,defence,cost)
-        #self.description='''
+class Hexer(Supporter):
+    def __init__(self,name,group,maxHP,atk,defence,cost):
+        super().__init__(name,group,maxHP,atk,defence,cost)
+        self.description='''
                          #Deals Arts Damage.			
                          #'''
+        self.block=1
+        self.artResis=25
+        self.atkTime=0.8
+        self.atkRange=[[False,True,True,False],
+                       [True,True,True,True],
+                       [True,'Center',True,True],
+                       [True,True,True,True],
+                       [False,True,True,False]]
+        self.damageType='Magical'
+        self.redeployTime=70
+        self.uD=[HighLand]
 
 #class Bard(Supporter):
     #def __init__(self,name,group,maxHP,atk,defence,cost):

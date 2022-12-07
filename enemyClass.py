@@ -137,7 +137,10 @@ class OriginiumSlug(NormalEnemy):
         super().__init__('Originium Slug',levelNo,'Infected Creature',('Melee'),('Ground'),550,180,0,0,1,1.0,0,0.5,0,0,[],origin,destination,emergeTime,checkPoints)
 
     def redraw(self,app,canvas):
-        canvas.create_oval(self.x-15,self.y-15,self.x+15,self.y+15,fill='yellow',outline='black',width=5)
+        if self.direction[0]==-1:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.originiumSlug_left))
+        else:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.originiumSlug_right))
         canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')
 
 #Normal Reunium Soldiers
@@ -146,16 +149,44 @@ class Soldier(NormalEnemy):
         super().__init__('Soldier',levelNo,None,('Melee'),('Ground'),1650,200,100,0,1,2.0,0,1.0,1,0,[],origin,destination,emergeTime,checkPoints)
     
     def redraw(self,app,canvas):
-        canvas.create_oval(self.x-25,self.y-25,self.x+25,self.y+25,fill='white',outline='black',width=5)
+        if self.direction[0]==-1:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.soldier_left))
+        else:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.soldier_right))
         canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')
 
 #Shield, needs magical damage
-class heavyGearDefender(EliteEnemy):
+class HeavyGearDefender(EliteEnemy):
     def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
-        super().__init__('heavyGearDefender',levelNo,None,('Melee'),('Ground'),6000,600,800,0,1,2.6,0,0.5,3,0,[],origin,destination,emergeTime,checkPoints)
+        super().__init__('HeavyGearDefender',levelNo,None,('Melee'),('Ground'),6000,600,800,0,1,2.6,0,0.5,3,0,[],origin,destination,emergeTime,checkPoints)
 
     def redraw(self,app,canvas):
-        canvas.create_oval(self.x-30,self.y-30,self.x+30,self.y+30,fill='black',outline='white',width=5)
+        if self.direction[0]==-1:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.heavyDefender_left))
+        else:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.heavyDefender_right))
         canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')
 
-        
+#Sarkaz, high magical resistance, need physical damage       
+class SarkazGreatswordsman(EliteEnemy):
+    def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
+        super().__init__('Sarkaz Greatswordsman',levelNo,'Sarkaz',('Melee'),('Ground'),7500,600,230,50,1,2.0,0,1.0,2,0,[],origin,destination,emergeTime,checkPoints)
+
+    def redraw(self,app,canvas):
+        if self.direction[0]==-1:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.sarkazGreatswordsman_left))
+        else:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.sarkazGreatswordsman_right))
+        canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')
+
+#A boss in the game: CrownSlayer
+class Crownslayer(LeaderEnemy):
+    def __init__(self,levelNo,origin,destination,emergeTime,checkPoints):
+        super().__init__('Crownslayer',levelNo,None,('Melee'),('Ground'),10000,550,150,50,2,2.8,0,2.0,1,0,[],origin,destination,emergeTime,checkPoints)
+
+    def redraw(self,app,canvas):
+        if self.direction[0]==-1:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.crownslayer_left))
+        else:
+            canvas.create_image(self.x,self.y,image=ImageTk.PhotoImage(app.crownslayer_right))
+        canvas.create_text(self.x,self.y+35,text=f'{self.currentHP}',font='Arial 12 bold',fill='red')

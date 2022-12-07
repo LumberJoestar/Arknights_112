@@ -1,3 +1,4 @@
+import math
 from enemyClass import*
 from operatorsClass import*
 from cmu_112_graphics import *
@@ -14,6 +15,9 @@ class Projectile():
         self.x,self.y=None,None
         self.oX,self.oY=self.x,self.y
         self.appear=False
+        #Projectile direction
+        self.dx,self.dy=0,0
+        self.angle=0
         self.timeCount=0
     
     def appears(self):
@@ -24,13 +28,21 @@ class Projectile():
         if self.appear:
             canvas.create_oval(self.x-self.r,self.y-self.r,self.x+self.r,self.y+self.r,fill=self.color,outline=self.outline)
     
-    def move(self,tarX,tarY):
-        dx,dy=int((tarX-self.x)/2),int((tarY-self.y)/2)
-        self.x,self.y=self.x+dx,self.y+dy
-        if almostEqual(self.timeCount%1000,0,epsilon=10**-7):
+    def setDirection(self,tarX,tarY):
+        self.appears()
+        self.dx,self.dy=(tarX-self.x)/5,(tarY-self.y)/5
+    
+    def move(self):
+        if self.appear:
+            self.x+=self.dx
+            self.y+=self.dy
+    
+    def isHit(self,tarX,tarY):
+        if math.sqrt((tarX-self.x)**2+(tarY-self.y)**2)<=50 and self.appear:
+            self.appear=False
             self.x=self.oX
             self.y=self.oY
-            self.appear=False
+            return True
     
     def timerFired(self,app):
         self.timeCount+=app.timerDelay/10
